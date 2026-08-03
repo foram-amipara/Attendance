@@ -8,20 +8,19 @@ const protect = wrapAsync(async(req,res,next)=>{
         token = req.headers.authorization.split(" ")[1];
     }
     if(!token){
-        res.status(401);
-        throw new Error("Not authorized, no token");
+        return res.status(401).json({ message: "Not authorized, no token" });
     }
     try{
         const decode = jwt.verify(token,process.env.JWT_SECRET);
         req.user=await User.findById(decode.id).select("-password");
         if(!req.user){
-            res.status(401);
-            throw new Error("Not authorized , user no longer exists");
+            return res.status(401).json({ message: "Not authorized, user no longer exists" });
         }
         next();
     }catch(error){
+        console.error("JWT Auth Error:", error.message)
         res.status(401);
-        throw new Error("Not authorized,token failed");
+        return res.status(401).json({ message: "Not authorized, token failed" });
     }
 });
 

@@ -10,3 +10,5 @@ router.use(protect);
 router.route("/")
     .get(subjectController.getSubject)
     .post(validateSubject,subjectController.createSubject);
+
+module.exports=router;
