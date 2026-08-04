@@ -10,5 +10,7 @@ router.use(protect);
 router.route("/")
     .get(subjectController.getSubject)
     .post(validateSubject,subjectController.createSubject);
-
+router.route("/:id")
+    .put(validateSubject,subjectController.updateSubject)
+    .delete(subjectController.deleteSubject)
 module.exports=router;
