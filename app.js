@@ -6,6 +6,7 @@ const app=express();
 const mongoose=require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const subjectRoutes = require("./routes/subjectRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
 const PORT = process.env.PORT || 8080;
 
 mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/student_attendance")
@@ -21,6 +22,7 @@ app.get("/",(req,res)=>{
 app.use("/api/auth", authRoutes);
 
 app.use("/api/subjects", subjectRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 app.listen(PORT,()=>{
     console.log("server is running");
