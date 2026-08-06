@@ -9,4 +9,7 @@ router.use(protect);
 router.route("/")
     .post(validateAttendance,attendanceController.markAttendance)
 
+router.route("/:subjectId")
+    .get(attendanceController.getAttendance);
+
 module.exports = router;

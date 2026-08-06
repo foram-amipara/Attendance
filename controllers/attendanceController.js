@@ -38,4 +38,36 @@ module.exports.markAttendance=wrapAsync(async(req,res)=>{
         updatedSubject: targetSub
     });
 
+});
+
+
+
+module.exports.getAttendance=wrapAsync(async (req,res)=>{
+    const { subjectId } = req.params;
+    const { stDate, endDate } = req.query;
+    const userId = req.user.id || req.user._id;
+
+    const subject = await Subject.findOne({ _id: subjectId, userId });//prevented using find here bcz if that subject wont exist then ill return empty array which still means subject exists
+    if(!subject){
+        throw new ExpressError(404, "Subject not found or unauthorized");
+    }
+    let query={subjectId,userId};
+    if(stDate && endDate){
+        query.date={
+            $gte: new Date(stDate),
+            $lte: new Date(endDate)
+        };
+    }else if(stDate){
+        query.date={$gte: new Date(stDate)};
+    }else if(endDate){
+        query.date={$lte: new Date(endDate)};
+    }
+
+    const attendanceRecord = await Attendance.find(query).sort({ date: 1 });
+
+    res.status(200).json({
+        message: "Attendance records fetched successfully",
+        count: attendanceRecord.length,
+        attendanceRecord
+    });
 })

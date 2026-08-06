@@ -8,9 +8,8 @@ module.exports.getSubject=wrapAsync(async(req,res)=>{
 });
 
 module.exports.createSubject=wrapAsync(async(req,res)=>{
-    const {name, targetPercentage,weeklyLectures,weeklyLabs}=req.body;
-    const newInfo = new Subject({name,targetPercentage,userId : req.user.id,weeklyLectures,
-        weeklyLabs});
+    const {name, targetPercentage,weeklyLectures,weeklyLabs,priorLecturesConducted = 0,priorLecturesPresent = 0,priorLabsConducted = 0, priorLabsPresent = 0}=req.body;
+    const newInfo = new Subject({name,targetPercentage,userId : req.user.id,weeklyLectures,weeklyLabs,priorLecturesConducted,priorLecturesPresent,priorLabsConducted,priorLabsPresent,totalLecturesConducted: priorLecturesConducted,lecturesPresent: priorLecturesPresent,totalLabsConducted: priorLabsConducted,labsPresent: priorLabsPresent});
     await newInfo.save();
     res.status(201).json({
         message: "Subject created successfully!",
@@ -21,10 +20,9 @@ module.exports.createSubject=wrapAsync(async(req,res)=>{
 
 module.exports.updateSubject=wrapAsync(async(req,res)=>{
     const {id}=req.params;
-    const{name, targetPercentage,weeklyLectures,weeklyLabs,totalLecturesConducted,lecturesPresent,totalLabsConducted,labsPresent}=req.body;
     const updateSub=await Subject.findOneAndUpdate(
     {_id:id,userId:req.user.id},
-    { name, targetPercentage,weeklyLectures,weeklyLabs,totalLecturesConducted,lecturesPresent,totalLabsConducted,labsPresent },
+    {$set:req.body},
     { new: true, runValidators: true }
     )
     

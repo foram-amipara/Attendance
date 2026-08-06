@@ -32,6 +32,22 @@ const subjectSchema = new mongoose.Schema(
             default: 0,
             min: 0,
         },
+            priorLecturesConducted: {
+            type: Number, 
+            default: 0
+        },
+        priorLecturesPresent: {
+            type: Number,
+            default: 0
+        },
+        priorLabsConducted: {
+            type: Number,
+            default: 0
+        },
+        priorLabsPresent: {
+            type: Number,
+            default: 0
+        },
         totalLecturesConducted: {
             type: Number,
             default: 0,
