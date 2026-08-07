@@ -12,4 +12,7 @@ router.route("/")
 router.route("/:subjectId")
     .get(attendanceController.getAttendance);
 
+router.route("/:id")
+    .put(validateAttendance,attendanceController.updateAttendance);
+
 module.exports = router;

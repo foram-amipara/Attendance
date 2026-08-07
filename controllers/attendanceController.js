@@ -5,7 +5,8 @@ const ExpressError = require("../utils/ExpressError");
 
 module.exports.markAttendance=wrapAsync(async(req,res)=>{
     const{subjectId,type,status,date}=req.body;
-    const targetSub = await Subject.findOne({_id:subjectId, userId:req.user.id});
+    const userId = req.user.id || req.user._id;
+    const targetSub = await Subject.findOne({_id:subjectId, userId});
     if(!targetSub){
         throw new ExpressError(404, "Subject not found or unauthorized");
     }
@@ -70,4 +71,75 @@ module.exports.getAttendance=wrapAsync(async (req,res)=>{
         count: attendanceRecord.length,
         attendanceRecord
     });
+})
+
+
+module.exports.updateAttendance=wrapAsync(async(req,res)=>{
+    const {id}=req.params;
+    const {status:newStatus,type:newType,date:newDate}=req.body;
+    const userId = req.user.id || req.user._id;
+
+    const attendanceRecord = await Attendance.findOne({_id:id,userId});
+    if(!attendanceRecord){
+        throw new ExpressError(404, "Attendance record not found or unauthorized");
+    }
+
+    const targetSub = await Subject.findOne({_id: attendanceRecord.subjectId,userId});
+    if(!targetSub){
+        throw new ExpressError(404, "subject not found or unauthorized");
+    }
+
+    const oldStatus=attendanceRecord.status;
+    const oldType=attendanceRecord.type;
+
+    if(oldStatus !== "CANCELLED"){
+        if(oldType === "LECTURE"){
+            targetSub.totalLecturesConducted = Math.max(0, targetSub.totalLecturesConducted-1);
+            if(oldStatus === "PRESENT"){
+                targetSub.lecturesPresent = Math.max(0, targetSub.lecturesPresent-1);
+            }
+        }else if(oldType === "LAB"){
+            targetSub.totalLabsConducted = Math.max(0, targetSub.totalLabsConducted-1);
+            if(oldStatus === "PRESENT"){
+                targetSub.labsPresent = Math.max(0, targetSub.labsPresent-1);
+            }
+        }
+    }
+
+    if(newStatus){
+        attendanceRecord.status = newStatus;
+    }
+    if(newType){
+        attendanceRecord.type = newType;
+    }
+    if(newDate){
+        attendanceRecord.date = newDate;
+    }
+
+    const currStatus = attendanceRecord.status;
+    const currType = attendanceRecord.type;
+
+    if(currStatus!=="CANCELLED"){
+        if(currType==="LECTURE"){
+            targetSub.totalLecturesConducted++;
+            if(currStatus === "PRESENT"){
+                targetSub.lecturesPresent++;
+            }
+        }else if(currType==="LAB"){
+            targetSub.totalLabsConducted++;
+            if(currStatus === "PRESENT"){
+                targetSub.labsPresent++;
+            }
+        }
+    }
+
+    await attendanceRecord.save();
+    await targetSub.save();
+
+    res.status(200).json({
+        message: "Attendance updated successfully",
+        attendanceRecord,
+        updatedSubject: targetSub
+    });
+
 })
