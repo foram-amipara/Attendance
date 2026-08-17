@@ -13,6 +13,7 @@ router.route("/:subjectId")
     .get(attendanceController.getAttendance);
 
 router.route("/:id")
-    .put(validateAttendance,attendanceController.updateAttendance);
+    .put(validateAttendance,attendanceController.updateAttendance)
+    .delete(attendanceController.deleteAttendance)
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const Subject=require("../models/Subject");
 const wrapAsync=require("../utils/wrapAsync");
+const ExpressError = require("../utils/ExpressError");
 
 
 module.exports.getSubject=wrapAsync(async(req,res)=>{
