@@ -1,7 +1,7 @@
 const Subject=require("../models/Subject");
 const wrapAsync=require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
-
+const { calculateBunkOrNeed } = require("../utils/attendanceCalculator");
 
 module.exports.getSubject=wrapAsync(async(req,res)=>{
     const subject=await Subject.find({userId: req.user.id});
