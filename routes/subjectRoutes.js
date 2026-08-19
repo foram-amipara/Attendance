@@ -13,4 +13,7 @@ router.route("/")
 router.route("/:id")
     .put(validateSubject,subjectController.updateSubject)
     .delete(subjectController.deleteSubject)
+    .get(subjectController.getSubjectById); 
+
+    
 module.exports=router;

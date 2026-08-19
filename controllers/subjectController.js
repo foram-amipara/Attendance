@@ -3,6 +3,60 @@ const wrapAsync=require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const { calculateBunkOrNeed } = require("../utils/attendanceCalculator");
 
+
+
+const buildSub = (subject) => {
+    const lec = calculateBunkOrNeed(
+        subject.lecturesPresent,
+        subject.totalLecturesConducted,
+        subject.targetPercentage
+    );
+
+    const lab = calculateBunkOrNeed(
+        subject.labsPresent,
+        subject.totalLabsConducted,
+        subject.targetPercentage
+    );
+
+    const totalConducted = subject.totalLecturesConducted + subject.totalLabsConducted;
+    const totalPresent = subject.lecturesPresent + subject.labsPresent;
+    const overAll =calculateBunkOrNeed(
+        totalPresent,
+        totalConducted,
+        subject.targetPercentage
+    )
+
+    return {
+        subjectId: subject._id,
+        name: subject.name,
+        targetPercentage: subject.targetPercentage,
+        lectures: lec,
+        labs:lab,
+        overall: overAll
+    };
+}
+
+
+module.exports.getSubjectById= wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const subject = await Subject.findOne({ _id: id, userId });
+    if (!subject) {
+        throw new ExpressError(404, "Subject not found or unauthorized");
+    }
+
+    const stats = buildSub(subject);
+
+    res.status(200).json({
+        subject,
+        stats
+    });
+});
+
+
+
+
 module.exports.getSubject=wrapAsync(async(req,res)=>{
     const subject=await Subject.find({userId: req.user.id});
     res.status(200).json(subject);

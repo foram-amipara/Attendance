@@ -32,7 +32,7 @@ const subjectSchema = new mongoose.Schema(
             default: 0,
             min: 0,
         },
-            priorLecturesConducted: {
+        priorLecturesConducted: {
             type: Number, 
             default: 0
         },
