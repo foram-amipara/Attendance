@@ -4,6 +4,7 @@ if(process.env.NODE_ENV != "production"){
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
+const ExpressError = require("./utils/ExpressError");
 const authRoutes = require("./routes/authRoutes");
 const subjectRoutes = require("./routes/subjectRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
@@ -23,6 +24,25 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/attendance", attendanceRoutes);
+
+
+app.all("*", (req, res, next) => {
+    next(new ExpressError(404, `Cannot ${req.method} ${req.originalUrl}`));
+})
+
+
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || "Something went wrong on the server";
+
+    res.status(statusCode).json({
+        success: false,
+        error: {
+            statusCode,
+            message
+        }
+    });
+});
 
 app.listen(PORT,()=>{
     console.log("server is running");

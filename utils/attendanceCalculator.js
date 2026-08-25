@@ -46,18 +46,20 @@ function calculateBunkOrNeed(present,total,targetPercentage){
                 message: "Target is 100%, which cannot be recovered after an absence."
             }
         }
-        const classNeed=Math.ceil(((targetDecimal*total)-present)/(1-targetDecimal));
+        const numerator = (targetDecimal * total) - present;
+        const denominator = 1 - targetDecimal;
+        const classNeed = Math.ceil(Math.round((numerator / denominator) * 1000) / 1000);
         return {
             present,
             total,
             currentPercentage,
             targetPercentage,
             status: "SHORTAGE",
-            classesCount: classesNeeded,
-            message: `You need to attend next ${classesNeeded} class consecutively.`
+            classesCount: classNeed,
+            message: `You need to attend next ${classNeed} class consecutively.`
         };
     }
-
+                                
     return{
         present,
         total,
