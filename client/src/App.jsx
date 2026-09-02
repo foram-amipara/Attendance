@@ -1,17 +1,23 @@
-import { useState } from 'react'
+import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
+const Dashboard = () => <div className="p-8 text-center text-2xl">Welcome to your Dashboard!</div>;
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold text-indigo-400">
-        hello
-      </h1>
-      <p className="text-slate-400 mt-2">
-        Attendance Tracker Frontend
-      </p>
-    </div>
-  );  
-}
+    <div className="min-h-screen bg-slate-900 text-slate-100">
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
 
-export default App
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </div>
+  );
+}
