@@ -1,12 +1,17 @@
 import axiosInstance from "./axiosInstance";
 
-export const getAllSubjects = async () => {
+export const getSubjects = async () => {
   const response = await axiosInstance.get("/subjects");
   return response.data;
 };
 
 export const createSubject = async (subjectData) => {
   const response = await axiosInstance.post("/subjects", subjectData);
+  return response.data;
+};
+
+export const updateSubject = async (id, subjectData) => {
+  const response = await axiosInstance.put(`/subjects/${id}`, subjectData);
   return response.data;
 };
 
