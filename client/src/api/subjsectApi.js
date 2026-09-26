@@ -5,6 +5,11 @@ export const getSubjects = async () => {
   return response.data;
 };
 
+export const getSubjectById = async (id) => {
+  const response = await axiosInstance.get(`/subjects/${id}`);
+  return response.data;
+};
+
 export const createSubject = async (subjectData) => {
   const response = await axiosInstance.post("/subjects", subjectData);
   return response.data;
