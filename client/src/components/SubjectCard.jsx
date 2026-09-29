@@ -13,27 +13,17 @@ export default function SubjectCard({ subject, onDelete, onEdit }) {
     : 100; 
     
   const isSafe = currentPercentage >= subject.criteria;
+  const hasLectures = subject.weeklyLectures > 0;
+  const hasLabs = subject.weeklyLabs > 0;
 
   return (
-    <div className="bg-slate-800 rounded-lg border border-slate-700 hover:border-indigo-500 transition-colors shadow-md flex flex-col">
-      <div className="p-5 flex-grow relative group">
+    <div className="bg-slate-800 rounded-lg border border-slate-700 hover:border-indigo-500/50 transition-colors shadow-md flex flex-col group/card">
+      <div className="p-5 flex-grow relative">
         
-        
-        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-3 bg-slate-800 pl-2 rounded">
-          <button 
-            onClick={() => onEdit(subject)}
-            className="text-slate-400 hover:text-indigo-400 transition-colors"
-            title="Edit Subject"
-          >
-            ✎
-          </button>
-          <button 
-            onClick={() => onDelete(subject._id)}
-            className="text-slate-400 hover:text-red-500 transition-colors"
-            title="Delete Subject"
-          >
-            ✕
-          </button>
+        {/* Action Buttons */}
+        <div className="absolute top-4 right-4 opacity-0 group-hover/card:opacity-100 transition-opacity flex gap-3 bg-slate-800 pl-2 rounded">
+          <button onClick={() => onEdit(subject)} className="text-slate-400 hover:text-indigo-400 transition-colors" title="Edit Subject">✎</button>
+          <button onClick={() => onDelete(subject._id)} className="text-slate-400 hover:text-red-500 transition-colors" title="Delete Subject">✕</button>
         </div>
 
         <div className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
@@ -56,26 +46,35 @@ export default function SubjectCard({ subject, onDelete, onEdit }) {
               <span className="text-slate-400">Total Classes:</span>
               <span className="text-slate-300">{totalAttended} / {totalConducted}</span>
             </div>
+            
+            {/* Conditional Sub-labels */}
+            {(hasLectures || hasLabs) && (
+              <div className="pt-2 mt-2 border-t border-slate-700/50 text-xs text-slate-500 flex gap-4">
+                {hasLectures && <span>Lec: {subject.weeklyLectures}/wk</span>}
+                {hasLabs && <span>Lab: {subject.weeklyLabs}/wk</span>}
+              </div>
+            )}
           </div>
         </div>
         
         <div className="mt-auto pt-4 border-t border-slate-700 flex gap-2">
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex-1 bg-slate-700/50 hover:bg-slate-700 text-slate-300 py-2 rounded transition-colors text-sm font-medium"
+            className="flex-1 bg-slate-700/30 hover:bg-slate-700 text-slate-300 py-2 rounded transition-colors text-sm font-medium"
           >
             {isExpanded ? "Hide Stats ▲" : "Insights ▼"}
           </button>
           <Link 
-            to={`/tracker/${subject._id}`}
-            className="flex-1 text-center bg-indigo-600/20 text-indigo-400 py-2 rounded hover:bg-indigo-600 hover:text-white transition-colors text-sm font-medium"
+            to={`/tracker`}
+            className="flex-1 text-center bg-indigo-600/10 text-indigo-400 py-2 rounded hover:bg-indigo-600 hover:text-white transition-colors text-sm font-medium border border-indigo-500/20 hover:border-transparent"
           >
             Tracker →
           </Link>
         </div>
       </div>
 
-      {isExpanded && <SubjectDropdown subjectId={subject._id} criteria={subject.criteria} />}
+      {/* Passing the whole subject object now */}
+      {isExpanded && <SubjectDropdown subject={subject} />}
     </div>
   );
 }
