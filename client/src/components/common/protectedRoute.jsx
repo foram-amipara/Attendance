@@ -7,7 +7,7 @@ export default function ProtectedRoute(){
 
     if(loading){
         return(
-            <div className="min-h-screen bg-slate-900 flex items-center justify-center text-slate-400">
+            <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--gray)]">
                 Loading...
             </div>         
         );
@@ -16,7 +16,7 @@ export default function ProtectedRoute(){
         return <Navigate to="/login" replace/>
     }
     return(
-        <div className="min-h-screen bg-slate-900 flex flex-col">
+        <div className="min-h-screen bg-[var(--bg)] flex flex-col">
             <Navbar/>
             <main className="flex-1 p-6">
                 <Outlet/>

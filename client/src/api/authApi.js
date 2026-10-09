@@ -6,6 +6,6 @@ export const signupApi=async(userData)=>{
 }
 
 export const loginApi=async(credentials)=>{
-    const res=await axiosInstance.post("/auth/login/",credentials);
+    const res=await axiosInstance.post("/auth/login",credentials);
     return res.data;
 }

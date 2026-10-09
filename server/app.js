@@ -4,15 +4,22 @@ if(process.env.NODE_ENV != "production"){
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
+const cors = require("cors"); 
 const ExpressError = require("./utils/ExpressError");
 const authRoutes = require("./routes/authRoutes");
 const subjectRoutes = require("./routes/subjectRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
+const timetableRoutes = require("./routes/timetableRoutes");
 const PORT = process.env.PORT || 8080;
 
 mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/student_attendance")
     .then(() => console.log("MongoDB Connected Successfully!"))
     .catch((err) => console.log("MongoDB Connection Error:", err));
+
+
+app.use(cors({ origin: "http://localhost:5173", credentials: true })); 
+
+app.use(express.json());
 
 app.use(express.json());
 
@@ -21,14 +28,15 @@ app.get("/",(req,res)=>{
 });
 
 app.use("/api/auth", authRoutes);
-
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/timetable", timetableRoutes);
 
 
-app.all("*", (req, res, next) => {
-    next(new ExpressError(404, `Cannot ${req.method} ${req.originalUrl}`));
-})
+
+app.use((req, res, next) => {
+  next(new ExpressError(404, 'Page Not Found'));
+});
 
 
 app.use((err, req, res, next) => {
@@ -45,5 +53,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT,()=>{
-    console.log("server is running");
+    console.log("server is running on port", PORT);
 });

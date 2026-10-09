@@ -13,20 +13,20 @@ export default function WeekNavigator({ currentDate, onPrev, onNext }) {
   };
 
   return (
-    <div className="flex items-center gap-4 bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 shadow-sm">
+    <div className="flex items-center gap-4 bg-[var(--card)] px-4 py-2 rounded-lg border border-[var(--border)] shadow-sm">
       <button 
         onClick={onPrev} 
-        className="text-slate-400 hover:text-indigo-400 transition-colors p-1"
+        className="text-[var(--gray)] hover:text-[var(--black)] font-bold transition-colors p-1"
         title="Previous Week"
       >
         ◀
       </button>
-      <span className="text-white font-medium min-w-[160px] text-center text-sm">
+      <span className="text-[var(--black)] font-medium min-w-[160px] text-center text-sm">
         {getMonFri(currentDate)}
       </span>
       <button 
         onClick={onNext} 
-        className="text-slate-400 hover:text-indigo-400 transition-colors p-1"
+        className="text-[var(--gray)] hover:text-[var(--black)] font-bold transition-colors p-1"
         title="Next Week"
       >
         ▶

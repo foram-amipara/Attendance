@@ -1,1 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 @import "tailwindcss";
+
+:root {
+  --bg: #0f172a;
+  --navbar: rgba(15, 23, 42, 0.75);
+  --card: rgba(30, 41, 59, 0.6);
+  --card-hover: rgba(30, 41, 59, 0.85);
+  --black: #f8fafc;
+  --white: #0f172a;
+  --gray: #94a3b8;
+  --border: rgba(148, 163, 184, 0.15);
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --danger: #ef4444;
+  --success: #10b981;
+}
+
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  background-attachment: fixed;
+  color: var(--black);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
